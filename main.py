@@ -22,14 +22,18 @@ gamemode = "Menu"
 
 running = True
 
-image_grass =       pygame.image.load("./assets/grass2.png")
-button_play =       utils.Button(width//2, height//2, 200, 70, (200, 150, 110), (250, 180, 220), utils.Text("Play", 52, (0,0,0)))
+image_grass =       pygame.image.load("./assets/grass1.png")
+button_play =       utils.Button(width//2, height//2, 200, 70, (55, 55, 55), (100, 110, 120), utils.Text("Play", 52, (255,255,255)))
 scroll_snakespeed = utils.ScrollSwitch(20, 20, 200, 20, 1, 20)
 text_highscore =    utils.Text("High Score: 0", 52, (255,255,255), 20, 50)
 text_score =        utils.Text("0", 52, (255,255,255), width//2-5, 10)
 
 highscore = 0
 score = 0
+
+pygame.mixer.music.load("./assets/background.wav")
+pygame.mixer.music.play(-1)
+
 
 while running:
     for event in pygame.event.get():
@@ -49,13 +53,14 @@ while running:
     
     if (gamemode == "Maingame"):
         surface_maingame.blit(image_grass, (0,0))
-        surface_maingame.blit(apple, (int(pos_apple[0]-5), int(pos_apple[1]-5)))
+        surface_maingame.blit(apple, (int(pos_apple[0]-15), int(pos_apple[1]-15)))
         snake.update()
         text_score.updateText(str(score))
         snake.draw(surface_maingame) 
         text_score.draw(surface_maingame)
 
         if (snake.collide(pos_apple[0], pos_apple[1], 20)):
+            pygame.mixer.Channel(1).play(pygame.mixer.Sound("./assets/crunch.wav"))
             snake.grow()
             score+=1
             pos_apple = (random.randint(0, width-40), random.randint(0, height-40))
